@@ -1,36 +1,53 @@
 <script setup>
 import { useUserStore } from "@/stores/user.js"
 import { useRouter } from 'vue-router'
-import {reactive} from "vue";
+import {ref, reactive} from "vue"
 
 const user = useUserStore()
 const router = useRouter()
 
+const formComponent = ref(null)
 const formData = reactive({
   email: '',
   password: ''
 })
+const formDataRules = {
+  email: [
+    { required: true, message: 'Это поле обязательно для заполнения', trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: 'Это поле обязательно для заполнения', trigger: 'blur' }
+  ],
+}
 
 function loginEvent() {
-  user.isUser = true
+  formComponent.value.validate((valid) => {
+    if (!valid) return
 
-  Object.assign(user.userData, formData)
+    user.isUser = true
 
-  router.push({name: 'homeView'})
+    Object.assign(user.userData, formData)
+
+    router.push({name: 'homeView'})
+  })
 }
 </script>
 
 <template>
   <el-main class="login-main">
     <el-card class="login-card">
+      <h1>Войти</h1>
       <el-form
-        label-width="60px"
-        label-position="right"
+          ref='formComponent'
+          :model='formData'
+          :rules='formDataRules'
+          label-width="60px"
+          label-position="top"
       >
-        <el-form-item label="Email">
+        <el-form-item prop='email' label="Email">
           <el-input class="login-input" v-model="formData.email"/>
         </el-form-item>
-        <el-form-item label="Пароль">
+        <el-form-item prop='password' label="Пароль">
           <el-input class="login-input" v-model="formData.password"/>
         </el-form-item>
       </el-form>
@@ -56,6 +73,5 @@ function loginEvent() {
 
 .login-btn {
   width: 100%;
-  border: 1px red solid;
 }
 </style>

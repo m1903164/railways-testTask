@@ -1,18 +1,42 @@
 <script setup>
-import CardItem from '../components/CardItem.vue'
+import { ref } from 'vue';
+import CardItem from '../components/CardItem.vue';
+import SideBarFilter from '../components/SideBarFilter.vue'
 
+const isDrawerOpen = ref(false)
+
+const openDrawer = () => {
+  isDrawerOpen.value = true
+};
+
+const applyFilters = () => {
+  // Логика применения фильтров
+  console.log('Применены фильтры')
+  isDrawerOpen.value = false
+};
+
+const resetFilters = () => {
+  // Логика сброса фильтров
+  console.log('Фильтры сброшены')
+  isDrawerOpen.value = false
+};
 </script>
 
 <template>
   <div class="home-container">
     <div class="home-header">
       <h3>Все категории</h3>
-      <el-button>Фильтры</el-button>
+      <el-button @click="openDrawer">Фильтры</el-button>
     </div>
     <div class="card-list-container">
-      <CardItem/>
+      <CardItem />
     </div>
   </div>
+  <SideBarFilter
+      v-model:isDrawerOpen="isDrawerOpen"
+      @applyFilters="applyFilters"
+      @resetFilters="resetFilters"
+  />
 </template>
 
 <style scoped>
