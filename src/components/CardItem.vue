@@ -20,6 +20,7 @@ onMounted(async() => {
       <div class="card-item" v-for="product in product.products" :key="product.id">
         <el-card class="box-card">
           <p class="box-card_title">{{ product.title }}</p>
+          <p>{{ product.price }}$</p>
           <el-button type="success" plain @click="showProductDetails(product)">В корзину</el-button>
         </el-card>
       </div>
