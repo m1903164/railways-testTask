@@ -6,5 +6,4 @@ import LayoutWrapper from '../src/layouts/LayoutWrapper.vue'
   <suspense>
     <LayoutWrapper/>
   </suspense>
-  <RouterView/>
 </template>
