@@ -1,11 +1,9 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 
-import HomeView from '../views/HomeView.vue'
 import Header from "@/components/Header.vue"
 
 const route = useRoute()
-const router = useRouter()
 
 </script>
 

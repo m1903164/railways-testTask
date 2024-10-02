@@ -1,17 +1,5 @@
 <script setup>
-
-import {onMounted} from "vue";
-
-const getDataFromServer =  () => {
-  fetch('https://fakestoreapi.com/carts')
-      .then(res=>res.json())
-      .then(json=>console.log(json))
-}
-
-onMounted(async () => {
-  await getDataFromServer()
-})
-
+import CardItem from '../components/CardItem.vue'
 </script>
 
 <template>
@@ -19,6 +7,9 @@ onMounted(async () => {
     <div class="home-header">
       <h3>Все категории</h3>
       <el-button>Фильтры</el-button>
+    </div>
+    <div class="card-list-container">
+      <CardItem/>
     </div>
   </div>
 </template>
@@ -33,5 +24,13 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #dcdfe6;
+  margin-bottom: 20px;
+}
+
+.card-list-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 </style>

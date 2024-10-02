@@ -14,8 +14,17 @@ const user = useUserStore()
     <div v-if="user.isUser">
       <AuthLayout/>
     </div>
-    <div v-else>
+    <div class="login-container" v-else>
       <LoginView/>
     </div>
   </transition>
 </template>
+
+<style scoped>
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
