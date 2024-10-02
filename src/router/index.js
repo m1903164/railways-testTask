@@ -4,6 +4,8 @@ import LoginView from '../views/LoginView.vue'
 import HomeView from '../views/HomeView.vue'
 import BasketView from '../views/BasketView.vue'
 
+import { isUserAuth } from './authGuard.js'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -15,7 +17,8 @@ const router = createRouter({
     {
       path: '/home',
       name: 'homeView',
-      component: HomeView
+      component: HomeView,
+      beforeEnter: isUserAuth
     },
     {
       path: '/login',
@@ -25,7 +28,8 @@ const router = createRouter({
     {
       path:'/basket',
       name: 'basketView',
-      component: BasketView
+      component: BasketView,
+      beforeEnter: isUserAuth
     }
   ]
 })

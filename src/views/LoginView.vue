@@ -1,12 +1,20 @@
 <script setup>
 import { useUserStore } from "@/stores/user.js"
 import { useRouter } from 'vue-router'
+import {reactive} from "vue";
 
 const user = useUserStore()
 const router = useRouter()
 
+const formData = reactive({
+  email: '',
+  password: ''
+})
+
 function loginEvent() {
   user.isUser = true
+
+  Object.assign(user.userData, formData)
 
   router.push({name: 'homeView'})
 }
@@ -20,10 +28,10 @@ function loginEvent() {
         label-position="right"
       >
         <el-form-item label="Email">
-          <el-input class="login-input" />
+          <el-input class="login-input" v-model="formData.email"/>
         </el-form-item>
         <el-form-item label="Пароль">
-          <el-input class="login-input"/>
+          <el-input class="login-input" v-model="formData.password"/>
         </el-form-item>
       </el-form>
       <el-button  @click="loginEvent" class="login-btn">
