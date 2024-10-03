@@ -5,8 +5,8 @@ import { useProductStore } from "@/stores/product"
 
 const product = useProductStore()
 
-const showProductDetails = (item) => {
-  product.createDataForTable(item)
+const operationWithProduct = (item, operation) => {
+  product.createDataForTable(item, operation)
 }
 
 onMounted(async() => {
@@ -19,9 +19,17 @@ onMounted(async() => {
     <div class="card-grid">
       <div class="card-item" v-for="product in product.products" :key="product.id">
         <el-card class="box-card">
+          <img class="box-card_image" :src="product.image">
           <p class="box-card_title">{{ product.title }}</p>
           <p>{{ product.price }}$</p>
-          <el-button type="success" plain @click="showProductDetails(product)">В корзину</el-button>
+          <div>
+            <el-button @click="operationWithProduct(product, 'increment')">
+              +
+            </el-button>
+            <el-button @click="operationWithProduct(product, 'decrement')">
+              -
+            </el-button>
+          </div>
         </el-card>
       </div>
     </div>
@@ -47,6 +55,11 @@ onMounted(async() => {
 
 .box-card {
   min-height: 200px;
+}
+
+.box-card_image {
+  width: 100px;
+  height: 100px;
 }
 
 @media (max-width: 1200px) {

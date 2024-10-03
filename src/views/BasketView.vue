@@ -3,44 +3,43 @@ import { useProductStore } from '@/stores/product'
 
 const product = useProductStore()
 
-const incrementQuantity = (id) => {
-  const product = productsForTable.find(product => product.id === id)
-  product.quantity++
+const addDeleteBasketItem = (row, operation) => {
+  product.createDataForTable(row, operation)
 }
 
-const decrementQuantity = (id) => {
-  const product = productsForTable.find(product => product.id === id)
-  if (product.quantity > 0) {
-    product.quantity--
-  }
-}
 </script>
 
 <template>
   <div class="basketPage_container">
     <h3 class="basketPage_title">Товары в корзине</h3>
+
     <el-table
       :data="product.tableData"
-      empty-text="Корзина пуста"
-      border 
+      empty-text="В корзине ничего нет"
+      border
     >
-      <el-table-column label="№" prop="id" width="50px"/>
-      <el-table-column label="Товар">
+      <el-table-column prop="id" label="№" width="50px"/>
+      <el-table-column label="Фото" width="100px">
         <template #default="{ row }">
           <img :src="row.image" style="width: 50px; margin-right: 10px;">
-          {{ row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="Количество">
+      <el-table-column label="Название" prop="title"/>
+      <el-table-column>
         <template #default="{ row }">
-          <el-button type="primary" size="mini" @click="decrementQuantity(row.id)">-</el-button>
-          {{ row.quantity }}
-          <el-button type="primary" size="mini" @click="incrementQuantity(row.id)">+</el-button>
+          <el-button @click="addDeleteBasketItem(row, 'increment')">
+            +
+          </el-button>
+          {{ row.count }}
+          <el-button @click="addDeleteBasketItem(row, 'decrement')">
+            -
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="Цена за единицу" prop="price"/>
-      <el-table-column label="Общая цена" prop="price"/>
+      <el-table-column label="Общая цена" prop="amount"/>
     </el-table>
+
   </div>
 </template>
 

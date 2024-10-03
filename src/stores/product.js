@@ -1,12 +1,12 @@
 import { defineStore } from "pinia"
-import { compile, computed, reactive } from "vue"
+import { computed, reactive } from "vue"
 
 export const useProductStore = defineStore('product', () => {
     const products = reactive([])
-    const productsForTable = reactive([])
+    const listOfProducts = reactive([])
 
     const tableData = computed(() => {
-        return productsForTable
+        return listOfProducts
     })
 
     const getProductsFromServer = async() => {
@@ -31,16 +31,46 @@ export const useProductStore = defineStore('product', () => {
         }
     }
 
-    const createDataForTable = (product) => {
-        productsForTable.push(product)
+    const createDataForTable = (product, operation) => {
+        const existingProduct = listOfProducts.find((existingProduct) => existingProduct.id === product.id)
 
-        console.log(productsForTable)
+        if (existingProduct) {
+            switch (operation) {
+                case 'increment':
+                    existingProduct.count++
+                    existingProduct.amount += product.price
+                    break
+                case 'decrement':
+                    existingProduct.count--
+                    existingProduct.amount -= product.price
+
+                    if (existingProduct.count <= 0) {
+                        const index = listOfProducts.indexOf(existingProduct)
+                        listOfProducts.splice(index, 1)
+                    }
+                    break
+            }
+        } else {
+            const productForTable = {
+                id: product.id,
+                title: product.title,
+                image: product.image,
+                price: product.price,
+                count: 1,
+                amount: product.price,
+            }
+
+            listOfProducts.push(productForTable)
+        }
+
+        console.log(listOfProducts)
     }
 
     return {
         products,
         tableData,
+
         getProductsFromServer,
-        createDataForTable
+        createDataForTable,
     }
 })
