@@ -1,62 +1,62 @@
 <script setup>
 import {defineProps, defineEmits, onMounted, reactive, ref} from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+
+import { useProductStore } from "@/stores/product"
+
+const product = useProductStore()
 
 const props = defineProps({
   isDrawerOpen: {
     type: Boolean,
-    required: true,
   }
 })
 
 const emit = defineEmits(['update:isDrawerOpen', 'applyFilters', 'resetFilters'])
 
-const categories = ref([])
+const filterData = reactive({
+  category: '',
+  minPrice: 0,
+  maxPrice: 0
+})
 
 const closeDrawer = () => {
-  emit('update:isDrawerOpen', false);
+  emit('update:isDrawerOpen', false)
 }
-const applyFilters = () => {
-  // Применение фильтров
+const applyFilters = async () => {
+  if (filterData.maxPrice < filterData.minPrice) {
+    filterData.minPrice = 0
+    filterData.maxPrice = 0
+
+    ElMessage({
+      type: 'error',
+      message: 'Минимальная цена не может быть больше макимальной'
+    })
+
+    return
+  }
+
+  await product.getFiltersProductsFromServer(filterData)
   emit('applyFilters')
   closeDrawer()
 }
-const resetFilters = () => {
-  // Сброс фильтров
+const resetFilters = async () => {
+  await product.getProductsFromServer()
   emit('resetFilters')
   closeDrawer()
 }
 
-const getCategoriesFromServer = async () => {
-  try {
-    const resp = await fetch('https://fakestoreapi.com/products/categories')
-    if (resp.ok) {
-      const json = await resp.json()
-
-      json.forEach(item => {
-        categories.value.push(item)
-      })
-
-      console.log(categories.value)
-
-    } else {
-      throw new Error(`Ошибка HTTP: ${resp.status}`)
-    }
-  }catch (e) {
-    console.log('getCategoriesFromServer || SideBarView =>', e)
-  }
-}
-
 onMounted(async () => {
-  await getCategoriesFromServer()
+  await product.getCategoriesFromServer()
 })
 </script>
 
 <template>
   <el-drawer v-model="props.isDrawerOpen" :before-close="closeDrawer">
     <p>Выберите категорию</p>
-    <el-select>
+    <el-select v-model="filterData.category">
       <el-option
-        v-for="item in categories"
+        v-for="item in product.categoriesList"
         :key="item"
         :label="item"
         :value="item"
@@ -65,12 +65,12 @@ onMounted(async () => {
 
     <p>Цена</p>
     <div>
-      <el-input-number label="Минимальная" />
-      <el-input-number label="Максималбная" />
+      <el-input-number label="Минимальная" v-model="filterData.minPrice" />
+      <el-input-number label="Максималбная" v-model="filterData.maxPrice" />
     </div>
 
     <div>
-      <el-button @click="applyFilters">Применить</el-button>
+      <el-button @click="applyFilters(filterData)">Применить</el-button>
       <el-button @click="resetFilters">Сбросить</el-button>
     </div>
   </el-drawer>
