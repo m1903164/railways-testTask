@@ -12,7 +12,9 @@ const route = useRoute()
   <div class="content-wrapper">
     <router-view v-slot="{ Component }" :key='route.name'>
       <transition name='fade' mode='out-in' appear>
-        <component :is="Component" />
+        <div>
+          <component :is="Component" />
+        </div>
       </transition>
     </router-view>
   </div>
